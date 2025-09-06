@@ -12,9 +12,10 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - DATABASE_URL=postgresql://secure_wiper:secure_password@postgres:5432/secure_wiper
-      - JWT_SECRET=your_jwt_secret_key_here
-      - ENCRYPTION_KEY=your_32_character_encryption_key
+      - DATABASE_URL=postgresql://secure_wiper:${POSTGRES_PASSWORD:-changeme}@postgres:5432/secure_wiper
+      - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_key_here}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-your_32_character_encryption_key}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme}
       - API_RATE_LIMIT=100
       - CERT_ISSUER_NAME=Secure Data Solutions
       - LOG_LEVEL=info
@@ -55,7 +56,7 @@ services:
     environment:
       - POSTGRES_DB=secure_wiper
       - POSTGRES_USER=secure_wiper
-      - POSTGRES_PASSWORD=secure_password
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-changeme}
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -72,14 +73,16 @@ services:
   redis:
     image: redis:7-alpine
     container_name: wipeout-redis
-    command: redis-server --appendonly yes --requirepass secure_redis_password
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-changeme}
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme}
     volumes:
       - redis-data:/data
     networks:
       - wipeout-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-changeme}", "--raw", "incr", "ping"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -141,7 +144,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin_password
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-changeme}
     volumes:
       - grafana-data:/var/lib/grafana
       - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
