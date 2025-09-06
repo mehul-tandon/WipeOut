@@ -18,12 +18,13 @@ const authLimiter = rateLimit({
 });
 
 // Simple in-memory user store (in production, use a proper database)
+// Default password is 'admin123' - CHANGE THIS IN PRODUCTION
 const users = [
   {
     id: 1,
     username: 'admin',
     email: 'admin@securedatasolutions.com',
-    password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+    password: process.env.ADMIN_PASSWORD_HASH || '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // Default: 'password'
     role: 'admin',
     createdAt: new Date().toISOString()
   }

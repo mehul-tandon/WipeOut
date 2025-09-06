@@ -32,6 +32,10 @@ JWT_SECRET=your_jwt_secret_key_here_minimum_32_characters
 
 # Encryption key for sensitive data - exactly 32 characters
 ENCRYPTION_KEY=your_32_character_encryption_key_here
+
+# Admin user password hash (generate with bcrypt)
+# Generate with: node -e "console.log(require('bcryptjs').hashSync('your_password', 10))"
+ADMIN_PASSWORD_HASH=your_bcrypt_hashed_admin_password
 ```
 
 #### Monitoring Security (Optional)
