@@ -1,0 +1,43 @@
+{
+  "name": "wipeout",
+  "version": "1.0.0",
+  "description": "WipeOut - NIST SP 800-88 compliant data erasure with tamper-proof certification",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "npm run build:frontend && npm run build:backend && npm run build:core",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build:core": "cd core-engine && python setup.py build",
+    "build:all": "npm run build && npm run package:all",
+    "package:all": "npm run package:windows && npm run package:linux && npm run package:android",
+    "package:windows": "cd build-scripts && ./build-windows.sh",
+    "package:linux": "cd build-scripts && ./build-linux.sh",
+    "package:android": "cd build-scripts && ./build-android.sh",
+    "test": "npm run test:backend && npm run test:frontend && npm run test:core",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test",
+    "test:core": "cd core-engine && python -m pytest",
+    "start": "cd backend && npm start",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ../core-engine && pip install -r requirements.txt"
+  },
+  "keywords": [
+    "data-wiping",
+    "security",
+    "NIST",
+    "certificate",
+    "encryption",
+    "compliance"
+  ],
+  "author": "Secure Data Solutions",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}
